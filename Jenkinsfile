@@ -70,7 +70,7 @@ pipeline {
             steps {
                 withDockerRegistry([credentialsId: 'DockerHub', url: '']) {
                     bat "docker push ${repository}:${BUILD_NUMBER}"
-                    bat "docker push ${repository}:${BUILD_NUMBER}"
+                    bat "docker push ${repository}:latest"
                 }
             }
         }
