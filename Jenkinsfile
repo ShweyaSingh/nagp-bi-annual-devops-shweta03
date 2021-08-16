@@ -82,7 +82,7 @@ pipeline {
                         script {
                             env.docker_port = 7400
 
-                            env.container_id = bat(script: "docker ps -qf name=c-${username}-master", returnStdOut: true).trim().readLines().drop(1).join('')
+                            env.container_id = bat(script: "docker ps -qf name=c-${username}-master", returnStdout: true).trim().readLines().drop(1).join('')
 
                             if (env.container_id != '') {
                                 bat "docker stop c-${username}-master && docker rm c-${username}-master"
