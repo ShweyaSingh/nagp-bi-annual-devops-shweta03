@@ -78,24 +78,28 @@ pipeline {
         stage('Docker & Kubernetes deployment') {
             parallel {
                 stage('Docker deployment') {
-                    script {
-                        env.docker_port = 7400
+                    steps {
+                        script {
+                            env.docker_port = 7400
 
-                        env.container_id = bat(script: "docker ps -qf name=c-${username}-master", returnStdOut: true).trim().readLines().drop(1).join('')
+                            env.container_id = bat(script: "docker ps -qf name=c-${username}-master", returnStdOut: true).trim().readLines().drop(1).join('')
 
-                        if (env.container_id != '') {
-                            bat "docker stop c-${username}-master && docker rm c-${username}-master"
+                            if (env.container_id != '') {
+                                bat "docker stop c-${username}-master && docker rm c-${username}-master"
                         } else {
-                            echo 'No such container exist'
-                        }
+                                echo 'No such container exist'
+                            }
 
-                        bat "docker run -d --name c-${username}-master -p ${docker_port}:80 i-${username}-master"
+                            bat "docker run -d --name c-${username}-master -p ${docker_port}:80 i-${username}-master"
+                        }
                     }
                 }
 
                 stage('Kubernetes deployment') {
-                    bat 'kubectl apply -f k8/deployment.yaml'
-                    bat 'kubectl apply -f k8/service.yaml'
+                    steps {
+                        bat 'kubectl apply -f k8/deployment.yaml'
+                        bat 'kubectl apply -f k8/service.yaml'
+                    }
                 }
             }
         }
